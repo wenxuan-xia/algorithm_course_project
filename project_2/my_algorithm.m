@@ -33,10 +33,12 @@ while (WID>LEN)
    for i=2:nums
        if (mod(i, 2) == 0)
            color = 'r';
+           color2 = 'g';
        else
            color = 'g';
+           color2 = 'r';
        end
-       rectangle('Position', [rect_pos(i,1), rect_pos(i,2), rect_pos(i,3), rect_pos(i,4)], 'edgecolor', color, 'facecolor', 'b');
+       rectangle('Position', [rect_pos(i,1), rect_pos(i,2), rect_pos(i,3), rect_pos(i,4)], 'edgecolor', color, 'facecolor', color2);
    end
    recorder = [recorder; [LEN, WID]];
    

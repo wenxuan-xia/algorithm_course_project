@@ -1,0 +1,21 @@
+% main
+
+%% initial
+    clc;
+    clear;
+%%
+num = 10;
+type = 1;
+len = 20;
+wid = 15;
+
+
+rect = data_maker(num, type, len, wid);
+
+for i=1:num
+    if (rect(i,1) < rect(i,2))
+        swap(rect(i,1), rect)
+    end
+end
+
+rect = sort(rect, 'descend');

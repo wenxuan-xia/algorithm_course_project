@@ -1,0 +1,20 @@
+function [ rect ] = data_maker(num, data_type, max_len, max_wid)
+%DATA_MAKER Summary of this function goes here
+%
+%FUNCTION:  generate random data for testing
+%INPUT:     num:    rect num
+%           data_type:  method of the ramdom
+%           max_len:    max length of rects
+%           max_wid:    max width of rects
+%                       1. 
+%OUTPUT:    rect:   an ([n, 2]) dimention matrix
+%                   record n rects of (len, wid)
+
+
+if (data_type == 'uniform') {
+    rect = [unidrnd(max_len, num), unidrnd(max_wid)]
+}
+
+
+end
+

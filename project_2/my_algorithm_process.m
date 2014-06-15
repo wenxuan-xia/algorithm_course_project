@@ -40,6 +40,7 @@ for i=1:num
     rect_pos = [rect_pos; [key_pos(insert_idx, 1), key_pos(insert_idx, 2), insert_way(1, 1), insert_way(1, 2)]];
     left_pos = key_pos(insert_idx, 1);
     top_pos = key_pos(insert_idx, 2) + insert_way(1, 2);
+    
     ll = 0;
     for i=size(rect_pos, 1):-1:1
         if ((rect_pos(i, 1) + rect_pos(i, 3) >= ll) && (rect_pos(i, 1) + rect_pos(i,3) <= left_pos))
@@ -51,6 +52,24 @@ for i=1:num
     if ((ll ~= 0) && (ll ~= left_pos))
         key_pos = [key_pos; [ll, top_pos]];
     end
+    
+    right_pos = key_pos(insert_idx, 1) + insert_way(1, 1);
+    down_pos = key_pos(insert_idx, 2);
+    
+    dd = 0;
+    for i=size(rect_pos, 1):-1:1
+        if ((rect_pos(i,2) + rect_pos(i,4) >= dd) && (rect_pos(i,2) + rect_pos(i,4) <= down_pos))
+            if (right_pos >= rect_pos(i,1) && right_pos < rect_pos(i,1) + rect_pos(i,3))
+                dd = rect_pos(i, 2) + rect_pos(i, 4);
+            end
+        end
+    end
+    if (dd ~= 0 && dd ~= down_pos)
+        key_pos = [key_pos; [right_pos, dd]];
+    end
+    
+    
+    
     key_pos = [key_pos; [key_pos(insert_idx, 1), key_pos(insert_idx, 2) + insert_way(1,2)]];
     key_pos = [key_pos; [key_pos(insert_idx, 1) + insert_way(1,1), key_pos(insert_idx, 2)]];
     ac_low_hi = key_pos(insert_idx, 2); %record low height of the rect

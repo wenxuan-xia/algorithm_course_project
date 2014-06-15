@@ -18,14 +18,14 @@ WID = 100000;
 
 while (WID>LEN)
    LEN = LEN + rect(num, 1);
-   [WID, rect_pos] = my_algorithm_process(rect, LEN);
-   if (WID * LEN < min_area)
-       min_area = WID*LEN;
-       axy = [LEN, WID];
+   [NEW_LEN, WID, rect_pos, key_pos] = my_algorithm_process(rect, LEN);
+   if (WID * NEW_LEN < min_area)
+       min_area = WID*NEW_LEN;
+       axy = [NEW_LEN, WID];
    end
-   if (2*(LEN + WID) < min_cir)
-      min_cir = 2*(LEN + WID);
-      cxy = [LEN, WID];
+   if (2*(NEW_LEN + WID) < min_cir)
+      min_cir = 2*(NEW_LEN + WID);
+      cxy = [NEW_LEN, WID];
    end
    %plot;
    nums = size(rect_pos, 1);
@@ -40,7 +40,9 @@ while (WID>LEN)
        end
        rectangle('Position', [rect_pos(i,1), rect_pos(i,2), rect_pos(i,3), rect_pos(i,4)], 'edgecolor', color, 'facecolor', color2);
    end
-   recorder = [recorder; [LEN, WID]];
+   hold on;
+   plot(key_pos(:,1)', key_pos(:,2)', '^');
+   recorder = [recorder; [NEW_LEN, WID]];
    
 end
 

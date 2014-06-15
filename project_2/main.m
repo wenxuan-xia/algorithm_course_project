@@ -4,7 +4,7 @@
     clc;
     clear;
 %%
-num = 10;
+num = 20;
 type = 1;
 len = 20;
 wid = 15;
@@ -20,11 +20,12 @@ for i=1:num
     end
 end
 
+%sort
 [sorted_rect, idx] = sort(rect, 1, 'descend');
-
 for i=1:num
     sorted_rect(i,2) = rect(idx(i,1), 2);
 end
+sorted_rect = my_sorted_modify(sorted_rect);
 
 [axy, cxy] = my_algorithm(sorted_rect);
 

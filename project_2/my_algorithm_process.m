@@ -1,11 +1,13 @@
-function [ WID, rect_pos ] = my_algorithm_process( rect, LEN )
+function [ LEN, WID, rect_pos, key_pos ] = my_algorithm_process( rect, LEN )
 %MY_ALGORITHM_PROCESS Summary of this function goes here
 %INPUT:
 %   rect:   n*2 mtx, sorted rects format (len, wid)
 %   LEN:    assumed rect lengthkey_pos = [key_pos; [rect_pos(insert_idx, 1), rect_pos(insert_idx, 2) + insert_way(1,2)]];
 %   
 %OUTPUT:
+%   LEN:    the lenth of the large rect.
 %   WID:    the width of the large rect.
+%   rect_pos:   return
 
 rect_pos = [];
 key_pos = [0,0];
@@ -36,13 +38,58 @@ for i=1:num
         end
     end
     rect_pos = [rect_pos; [key_pos(insert_idx, 1), key_pos(insert_idx, 2), insert_way(1, 1), insert_way(1, 2)]];
+    left_pos = key_pos(insert_idx, 1);
+    top_pos = key_pos(insert_idx, 2) + insert_way(1, 2);
+    ll = 0;
+    for i=size(rect_pos, 1):-1:1
+        if ((rect_pos(i, 1) + rect_pos(i, 3) >= ll) && (rect_pos(i, 1) + rect_pos(i,3) <= left_pos))
+            if (top_pos >= rect_pos(i, 2) && (top_pos < rect_pos(i,2) + rect_pos(i,4)))
+                ll = rect_pos(i, 1) + rect_pos(i, 3);
+            end
+        end
+    end
+    if ((ll ~= 0) && (ll ~= left_pos))
+        key_pos = [key_pos; [ll, top_pos]];
+    end
     key_pos = [key_pos; [key_pos(insert_idx, 1), key_pos(insert_idx, 2) + insert_way(1,2)]];
     key_pos = [key_pos; [key_pos(insert_idx, 1) + insert_way(1,1), key_pos(insert_idx, 2)]];
+    ac_low_hi = key_pos(insert_idx, 2); %record low height of the rect
+    ac_high_hi = key_pos(insert_idx, 2) + insert_way(1,2); %record high height of the rect
+    ac_x_hi = key_pos(insert_idx, 1) + insert_way(1, 1);
     
     rows = size(key_pos, 1);
     key_pos = [key_pos(1:insert_idx-1, :); key_pos(insert_idx+1:rows, :)];
+    
+    [key_pos_prime, idx] = sort(key_pos);
+    key_pos_prime(:,2) = key_pos(idx(:,1),2);
+    key_pos = key_pos_prime;
+    
+    key_pos_insert = [];
+    for i=1:size(key_pos, 1)
+        if (key_pos(i,1) > ac_x_hi)
+            if ((key_pos(i,2) >= ac_low_hi) && (key_pos(i,2) < ac_high_hi))
+                key_pos_insert = [key_pos_insert; [ac_x_hi, key_pos(i, 2)]];
+                ac_low_hi = max(ac_x_hi, key_pos(i,2));
+            end
+        end
+    end
+    
+    for i=1:size(key_pos_insert, 1)
+        key_pos = [key_pos; key_pos_insert(i,:) ];
+    end
+    %sort again
+    [keey_pos, idx] = sort(key_pos);
+    for i=1:size(keey_pos, 1)
+        keey_pos(i,1) = key_pos(idx(i,2), 1);
+    end
+    key_pos = keey_pos;
+    key_pos = my_sorted_modify_2(key_pos);
     WID = max(hi, WID);
 end
 
+LEN = 0;
+for i=1:size(rect_pos)
+    LEN = max(rect_pos(i, 1) + rect_pos(i, 3), LEN);
 end
 
+end
